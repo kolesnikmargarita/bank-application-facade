@@ -25,6 +25,9 @@ public class User {
     @Column(name = "phone_number", length = 64, nullable = false, unique = true)
     private String phoneNumber;
 
+    @Column(name = "image_name", length = 64)
+    private String imageName;
+
     // один пользователь ко многим счетам
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Account> accounts;
@@ -78,5 +81,13 @@ public class User {
 
     public void setAccounts(List<Account> accounts) {
         this.accounts = accounts;
+    }
+
+    public String getImageName() {
+        return imageName;
+    }
+
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
     }
 }

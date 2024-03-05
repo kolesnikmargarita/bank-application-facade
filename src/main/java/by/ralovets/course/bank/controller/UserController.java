@@ -26,13 +26,23 @@ public class UserController {
 
     @GetMapping("/{id}")
     public UserDto findById(@PathVariable Long id) {
-        return userService.findById(id);
+        return userService.findDtoById(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public UserDto create(@RequestBody CreateUserDto dto) {
         return userService.createUser(dto);
+    }
+
+    @PutMapping("/{id}")
+    public UserDto updateUser(@PathVariable Long id, @RequestBody UpdateUserDto dto) {
+        return userService.updateUser(id, dto);
+    }
+
+    @PatchMapping("/{id}")
+    public UserDto updateUserParts(@PathVariable Long id, @RequestBody UpdateUserDto dto) {
+        return userService.updateUserPartially(id, dto);
     }
 
     @DeleteMapping("/{id}")

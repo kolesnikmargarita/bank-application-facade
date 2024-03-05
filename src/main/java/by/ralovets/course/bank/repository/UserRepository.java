@@ -42,7 +42,12 @@ public class UserRepository {
     // обновим часть информации о пользователе
     public User save(User user) {
         return sessionFactory.fromTransaction(session -> {
-            session.persist(user);
+            // fixed: detached entity passed to persist: by.ralovets.course.bank.entity.User
+            if (user.getId() == null) {
+                session.persist(user);
+            } else {
+                session.merge(user);
+            }
 
             return user;
         });

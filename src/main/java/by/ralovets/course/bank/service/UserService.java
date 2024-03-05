@@ -4,6 +4,7 @@ import by.ralovets.course.bank.dto.CreateUserDto;
 import by.ralovets.course.bank.dto.UpdateUserDto;
 import by.ralovets.course.bank.dto.UserDto;
 import by.ralovets.course.bank.entity.User;
+import by.ralovets.course.bank.exception.EntityNotFoundException;
 import by.ralovets.course.bank.mapper.UserMapper;
 import by.ralovets.course.bank.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -22,14 +23,20 @@ public class UserService {
         this.userMapper = userMapper;
     }
 
-    public UserDto findById(Long id) {
+    public UserDto findDtoById(Long id) {
+        return userMapper.toDto(
+                findUserById(id)
+        );
+    }
+
+    public User findUserById(Long id) {
         final Optional<User> optionalUser = userRepository.findById(id);
 
         if (optionalUser.isEmpty()) {
             throw new RuntimeException("Пользователь не найден");
         }
 
-        return userMapper.toDto(optionalUser.get());
+        return optionalUser.get();
     }
 
     // найти всех
@@ -54,7 +61,7 @@ public class UserService {
         final Optional<User> optionalUser = userRepository.findById(id);
 
         if (optionalUser.isEmpty()) {
-            throw new RuntimeException("Пользователь не найден");
+            throw new EntityNotFoundException("Пользователь не найден");
         }
 
         final User user = optionalUser.get();
@@ -73,7 +80,7 @@ public class UserService {
         final Optional<User> optionalUser = userRepository.findById(id);
 
         if (optionalUser.isEmpty()) {
-            throw new RuntimeException("Пользователь не найден");
+            throw new EntityNotFoundException("Пользователь не найден");
         }
 
         final User user = optionalUser.get();
