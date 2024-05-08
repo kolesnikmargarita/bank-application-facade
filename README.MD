@@ -15,6 +15,6 @@ http:/localhost:8080/users/{id} - найти либо добавить ават�
 
 ## Необходимая конфигурация
 
-hibernate.properties -> исправить username и password
+application.yml -> исправить username и password
 при первом запуске hibernate.hbm2ddl.auto=create
 при повторном hibernate.hbm2ddl.auto=update
