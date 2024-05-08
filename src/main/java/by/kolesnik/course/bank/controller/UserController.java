@@ -1,5 +1,6 @@
 package by.kolesnik.course.bank.controller;
 
+import by.kolesnik.course.bank.controller.openapi.UserOpenApi;
 import by.kolesnik.course.bank.dto.CreateUserDto;
 import by.kolesnik.course.bank.dto.ErrorResponse;
 import by.kolesnik.course.bank.dto.UpdateUserDto;
@@ -20,10 +21,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Tag(name = "Работа с пользователями", description = "Данный контроллер позволяет производить SRUD-операции над пользователями")
 @RestController
 @RequestMapping("/users")
-public class UserController {
+public class UserController implements UserOpenApi {
 
     private final UserFacade userFacade;
 
@@ -31,78 +31,40 @@ public class UserController {
         this.userFacade = userFacade;
     }
 
+    @Override
     @GetMapping
-    @Operation(
-            method = "GET",
-            summary = "Получить список всех пользователей",
-            description = "Выводит список всех пользователей, находящихся в базе",
-            tags = "Работа с пользователями",
-            security = @SecurityRequirement(name = "Не требуется")
-    )
-    @ApiResponses({
-            @ApiResponse(
-                    description = "Список пользователей успешно получен",
-                    responseCode = "200",
-                    content = @Content(
-                            mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            array = @ArraySchema(schema = @Schema(implementation = UserDto.class)),
-                            examples = @ExampleObject("""
-                                    [
-                                        {
-                                            "id": 1,
-                                            "firstName": "John",
-                                            "lastName": "Doe",
-                                            "email": "johndoe@example.com",
-                                            "phoneNumber": "8-800-555-35-35"
-                                        }
-                                    ]
-                                    """)
-                    )
-            ),
-            @ApiResponse(
-                    description = "Внутренняя ошибка сервера",
-                    responseCode = "500",
-                    content = @Content(
-                            mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = ErrorResponse.class),
-                            examples = @ExampleObject("""
-                                    [
-                                        {
-                                            "message": "Неизвестная ошибка сервера"
-                                        }
-                                    ]
-                                    """)
-                    )
-            )
-    }
-    )
     public List<UserDto> findAll() {
         return userFacade.findAll();
     }
 
+    @Override
     @GetMapping("/{id}")
     public UserDto findById(@PathVariable Long id) {
         return userFacade.findById(id);
     }
 
+    @Override
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public UserDto create(@RequestBody CreateUserDto dto) {
         return userFacade.createUser(dto);
     }
 
+    @Override
     @PutMapping("/{id}")
     public UserDto updateUser(@PathVariable Long id, @RequestBody UpdateUserDto dto) {
         return userFacade.updateUser(id, dto);
     }
 
+    @Override
     @PatchMapping("/{id}")
     public UserDto updateUserParts(@PathVariable Long id, @RequestBody UpdateUserDto dto) {
         return userFacade.updateUserPartially(id, dto);
     }
 
+    @Override
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    //@ResponseStatus(HttpStatus.NO_CONTENT)
     public void removeById(@PathVariable Long id) {
         userFacade.removeById(id);
     }
