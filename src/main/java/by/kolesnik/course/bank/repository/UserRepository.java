@@ -11,5 +11,5 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long> {
 
     @NonNull Optional<User> findById(@NonNull Long id);
-    void removeById(@NonNull Long id);
+    //void removeById(@NonNull Long id);
 }
