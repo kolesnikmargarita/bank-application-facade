@@ -1,6 +1,6 @@
-package by.ralovets.course.bank.repository;
+package by.kolesnik.course.bank.repository;
 
-import by.ralovets.course.bank.entity.User;
+import by.kolesnik.course.bank.entity.User;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.MutationQuery;
 import org.hibernate.query.Query;
@@ -10,13 +10,9 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class UserRepository {
+public class DeprecatedUserRepository {
 
-    private final SessionFactory sessionFactory;
-
-    public UserRepository(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
+    private final SessionFactory sessionFactory = null;
 
     // найти по id
     public Optional<User> findById(Long id) {

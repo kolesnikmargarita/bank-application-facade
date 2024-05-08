@@ -1,8 +1,8 @@
-package by.ralovets.course.bank.mapper;
+package by.kolesnik.course.bank.mapper;
 
-import by.ralovets.course.bank.dto.CreateUserDto;
-import by.ralovets.course.bank.dto.UserDto;
-import by.ralovets.course.bank.entity.User;
+import by.kolesnik.course.bank.dto.CreateUserDto;
+import by.kolesnik.course.bank.dto.UserDto;
+import by.kolesnik.course.bank.entity.User;
 import org.springframework.stereotype.Component;
 
 @Component

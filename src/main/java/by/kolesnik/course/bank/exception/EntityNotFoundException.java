@@ -1,4 +1,4 @@
-package by.ralovets.course.bank.exception;
+package by.kolesnik.course.bank.exception;
 
 public class EntityNotFoundException extends RuntimeException {
 

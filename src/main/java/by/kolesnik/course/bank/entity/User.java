@@ -1,4 +1,4 @@
-package by.ralovets.course.bank.entity;
+package by.kolesnik.course.bank.entity;
 
 import jakarta.persistence.*;
 

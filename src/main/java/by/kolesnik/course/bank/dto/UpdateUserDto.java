@@ -1,4 +1,4 @@
-package by.ralovets.course.bank.dto;
+package by.kolesnik.course.bank.dto;
 
 public class UpdateUserDto {
 

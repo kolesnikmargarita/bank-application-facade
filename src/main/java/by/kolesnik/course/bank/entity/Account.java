@@ -1,4 +1,4 @@
-package by.ralovets.course.bank.entity;
+package by.kolesnik.course.bank.entity;
 
 import jakarta.persistence.*;
 
@@ -21,7 +21,7 @@ public class Account {
     private Double amount; // 1.00
 
     // много счетов к одному пользователю
-    @ManyToOne(optional = false, cascade = CascadeType.ALL)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "user_id")
     private User user;
 

@@ -1,7 +1,7 @@
-package by.ralovets.course.bank.controller;
+package by.kolesnik.course.bank.controller;
 
-import by.ralovets.course.bank.dto.ErrorResponse;
-import by.ralovets.course.bank.exception.EntityNotFoundException;
+import by.kolesnik.course.bank.dto.ErrorResponse;
+import by.kolesnik.course.bank.exception.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

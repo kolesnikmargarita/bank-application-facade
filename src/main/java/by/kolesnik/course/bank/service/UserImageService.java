@@ -1,10 +1,8 @@
-package by.ralovets.course.bank.service;
+package by.kolesnik.course.bank.service;
 
-import by.ralovets.course.bank.dto.UploadResultDto;
-import by.ralovets.course.bank.entity.User;
-import by.ralovets.course.bank.exception.EntityNotFoundException;
-import by.ralovets.course.bank.repository.UserRepository;
-import by.ralovets.course.bank.util.FileUtil;
+import by.kolesnik.course.bank.dto.UploadResultDto;
+import by.kolesnik.course.bank.util.FileUtil;
+import by.kolesnik.course.bank.entity.User;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
@@ -22,10 +20,10 @@ import java.util.UUID;
 public class UserImageService {
 
     private final Path path = Paths.get("file-storage");
-    private final UserRepository userRepository;
+    private final UserService userService;
 
-    public UserImageService(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public UserImageService(UserService userService) {
+        this.userService = userService;
 
         try {
             if (!Files.exists(path)) {
@@ -79,20 +77,14 @@ public class UserImageService {
     }
 
     private void updateUserImageName(Long id, String filename) {
-        final User user = userRepository.findById(id).orElseThrow(
-                () -> new EntityNotFoundException("Пользователь не найден")
-        );
+        final User user = userService.findUserById(id);
 
         user.setImageName(filename);
 
-        userRepository.save(user);
+        userService.save(user);
     }
 
     private String findImageNameByUserId(Long id) {
-        final User user = userRepository.findById(id).orElseThrow(
-                () -> new EntityNotFoundException("Пользователь не найден")
-        );
-
-        return user.getImageName();
+        return userService.findUserById(id).getImageName();
     }
 }

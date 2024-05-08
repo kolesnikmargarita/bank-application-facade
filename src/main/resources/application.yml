@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    url: "jdbc:postgresql://localhost:5432/bank"
+    username: "postgres"
+    password: "Umbrella:)"
+    driver-class-name: org.postgresql.Driver
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+
+#spring.datasource.url=
+#spring.datasource.name=
+#spring.datasource.password=
+#spring.datasource.driver-class-name=
