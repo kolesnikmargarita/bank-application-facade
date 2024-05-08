@@ -1,6 +1,7 @@
 package by.kolesnik.course.bank.facade;
 
 import by.kolesnik.course.bank.dto.UploadResultDto;
+import by.kolesnik.course.bank.exception.IncorrectURLException;
 import by.kolesnik.course.bank.service.UserImageService;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -20,6 +21,8 @@ public class UserImageFacade {
     }
 
     public UploadResultDto save(Long id, MultipartFile file) {
+        userImageService.deleteFile(id);
+
         final String filename = userImageService.saveFile(file);
 
         userImageService.updateUserImageName(id, filename);
@@ -29,10 +32,6 @@ public class UserImageFacade {
 
     public Resource findByUserId(Long id) {
 
-        try {
-            return userImageService.findByUserId(id);
-        } catch (MalformedURLException exception) {
-            throw new RuntimeException("Ошибка: " + exception.getMessage());
-        }
+        return userImageService.findByUserId(id);
     }
 }

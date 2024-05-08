@@ -27,6 +27,7 @@ public class UserImageController implements UserImageOpenApi {
         return imageFacade.save(id, file);
     }
 
+    @Override
     @GetMapping
     public ResponseEntity<Resource> find(@PathVariable Long id) {
         final Resource resource = imageFacade.findByUserId(id);

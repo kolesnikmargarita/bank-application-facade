@@ -1,8 +1,10 @@
 package by.kolesnik.course.bank.service;
 
 import by.kolesnik.course.bank.dto.UploadResultDto;
+import by.kolesnik.course.bank.exception.CantDeleteFileException;
 import by.kolesnik.course.bank.exception.CantLoadFileException;
 import by.kolesnik.course.bank.exception.CantReadFileException;
+import by.kolesnik.course.bank.exception.IncorrectURLException;
 import by.kolesnik.course.bank.util.FileUtil;
 import by.kolesnik.course.bank.entity.User;
 import org.springframework.core.io.Resource;
@@ -41,23 +43,27 @@ public class UserImageService {
     // найти пользователя по id
     // сохранить имя картинки у пользователя
     // вернуть URL
-    public UploadResultDto save(Long id, MultipartFile file) {
+    /*public UploadResultDto save(Long id, MultipartFile file) {
         final String filename = saveFile(file);
 
         updateUserImageName(id, filename);
 
         return new UploadResultDto(filename, null);
-    }
+    }*/
 
-    public Resource findByUserId(Long id) throws MalformedURLException {
+    public Resource findByUserId(Long id) {
         final String filename = findImageNameByUserId(id);
         final Path file = path.resolve(filename);
 
-        Resource resource = new UrlResource(file.toUri());
-        if (resource.exists() || resource.isReadable()) {
-            return resource;
-        } else {
-            throw new CantReadFileException("Не удалось прочитать файл.");
+        try {
+            Resource resource = new UrlResource(file.toUri());
+            if (resource.exists() || resource.isReadable()) {
+                return resource;
+            } else {
+                throw new CantReadFileException("Не удалось прочитать файл.");
+            }
+        } catch (MalformedURLException exception) {
+            throw new IncorrectURLException("Ошибка: " + exception.getMessage());
         }
     }
 
@@ -74,6 +80,14 @@ public class UserImageService {
         return filename;
     }
 
+    public void deleteFile(Long id) {
+        try {
+            Files.delete(path.resolve(findImageNameByUserId(id)));
+        } catch (IOException exception) {
+            throw new CantDeleteFileException("Ошибка удаления файла:" + exception.getMessage());
+        }
+    }
+
     public void updateUserImageName(Long id, String filename) {
         final User user = userService.findUserById(id);
 
@@ -82,7 +96,7 @@ public class UserImageService {
         userService.save(user);
     }
 
-    public String findImageNameByUserId(Long id) {
+    private String findImageNameByUserId(Long id) {
         return userService.findUserById(id).getImageName();
     }
 }
