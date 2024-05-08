@@ -1,6 +1,8 @@
 package by.kolesnik.course.bank.service;
 
 import by.kolesnik.course.bank.dto.UploadResultDto;
+import by.kolesnik.course.bank.exception.CantLoadFileException;
+import by.kolesnik.course.bank.exception.CantReadFileException;
 import by.kolesnik.course.bank.util.FileUtil;
 import by.kolesnik.course.bank.entity.User;
 import org.springframework.core.io.Resource;
@@ -47,36 +49,32 @@ public class UserImageService {
         return new UploadResultDto(filename, null);
     }
 
-    public Resource findByUserId(Long id) {
+    public Resource findByUserId(Long id) throws MalformedURLException {
         final String filename = findImageNameByUserId(id);
         final Path file = path.resolve(filename);
 
-        try {
-            Resource resource = new UrlResource(file.toUri());
-            if (resource.exists() || resource.isReadable()) {
-                return resource;
-            } else {
-                throw new RuntimeException("Не удалось прочитать файл.");
-            }
-        } catch (MalformedURLException exception) {
-            throw new RuntimeException("Ошибка: " + exception.getMessage());
+        Resource resource = new UrlResource(file.toUri());
+        if (resource.exists() || resource.isReadable()) {
+            return resource;
+        } else {
+            throw new CantReadFileException("Не удалось прочитать файл.");
         }
     }
 
-    private String saveFile(MultipartFile file) {
+    public String saveFile(MultipartFile file) {
         final String extension = FileUtil.getFileExtension(file.getOriginalFilename());
         final String filename = UUID.randomUUID() + extension;
 
         try {
             Files.copy(file.getInputStream(), path.resolve(filename));
         } catch (IOException exception) {
-            throw new RuntimeException("Ошибка загрузки файла:" + exception.getMessage());
+            throw new CantLoadFileException("Ошибка загрузки файла:" + exception.getMessage());
         }
 
         return filename;
     }
 
-    private void updateUserImageName(Long id, String filename) {
+    public void updateUserImageName(Long id, String filename) {
         final User user = userService.findUserById(id);
 
         user.setImageName(filename);
@@ -84,7 +82,7 @@ public class UserImageService {
         userService.save(user);
     }
 
-    private String findImageNameByUserId(Long id) {
+    public String findImageNameByUserId(Long id) {
         return userService.findUserById(id).getImageName();
     }
 }
