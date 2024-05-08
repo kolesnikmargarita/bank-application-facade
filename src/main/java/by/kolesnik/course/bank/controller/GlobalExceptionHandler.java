@@ -17,22 +17,22 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
 
-    @ExceptionHandler(CantReadFileException.class)
-    public ResponseEntity<ErrorResponse> handleNotFoundException(CantReadFileException exception) {
+    @ExceptionHandler(ImpossiblyReadFileException.class)
+    public ResponseEntity<ErrorResponse> handleNotFoundException(ImpossiblyReadFileException exception) {
         final ErrorResponse response = new ErrorResponse(exception.getMessage());
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
 
-    @ExceptionHandler(CantLoadFileException.class)
-    public ResponseEntity<ErrorResponse> handleNotFoundException(CantLoadFileException exception) {
+    @ExceptionHandler(ImpossiblyLoadFileException.class)
+    public ResponseEntity<ErrorResponse> handleNotFoundException(ImpossiblyLoadFileException exception) {
         final ErrorResponse response = new ErrorResponse(exception.getMessage());
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
 
-    @ExceptionHandler(CantDeleteFileException.class)
-    public ResponseEntity<ErrorResponse> handleNotFoundException(CantDeleteFileException exception) {
+    @ExceptionHandler(ImpossiblyDeleteFileException.class)
+    public ResponseEntity<ErrorResponse> handleNotFoundException(ImpossiblyDeleteFileException exception) {
         final ErrorResponse response = new ErrorResponse(exception.getMessage());
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
@@ -40,6 +40,13 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(IncorrectURLException.class)
     public ResponseEntity<ErrorResponse> handleNotFoundException(IncorrectURLException exception) {
+        final ErrorResponse response = new ErrorResponse(exception.getMessage());
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+
+    @ExceptionHandler(ImpossiblySaveUserException.class)
+    public ResponseEntity<ErrorResponse> handleNotFoundException(ImpossiblySaveUserException exception) {
         final ErrorResponse response = new ErrorResponse(exception.getMessage());
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);

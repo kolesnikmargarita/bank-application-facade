@@ -1,9 +1,8 @@
 package by.kolesnik.course.bank.service;
 
-import by.kolesnik.course.bank.dto.UploadResultDto;
-import by.kolesnik.course.bank.exception.CantDeleteFileException;
-import by.kolesnik.course.bank.exception.CantLoadFileException;
-import by.kolesnik.course.bank.exception.CantReadFileException;
+import by.kolesnik.course.bank.exception.ImpossiblyDeleteFileException;
+import by.kolesnik.course.bank.exception.ImpossiblyLoadFileException;
+import by.kolesnik.course.bank.exception.ImpossiblyReadFileException;
 import by.kolesnik.course.bank.exception.IncorrectURLException;
 import by.kolesnik.course.bank.util.FileUtil;
 import by.kolesnik.course.bank.entity.User;
@@ -60,11 +59,15 @@ public class UserImageService {
             if (resource.exists() || resource.isReadable()) {
                 return resource;
             } else {
-                throw new CantReadFileException("Не удалось прочитать файл.");
+                throw new ImpossiblyReadFileException("Не удалось прочитать файл.");
             }
         } catch (MalformedURLException exception) {
             throw new IncorrectURLException("Ошибка: " + exception.getMessage());
         }
+    }
+
+    private void UrlResource() throws MalformedURLException {
+        throw new MalformedURLException();
     }
 
     public String saveFile(MultipartFile file) {
@@ -74,7 +77,7 @@ public class UserImageService {
         try {
             Files.copy(file.getInputStream(), path.resolve(filename));
         } catch (IOException exception) {
-            throw new CantLoadFileException("Ошибка загрузки файла:" + exception.getMessage());
+            throw new ImpossiblyLoadFileException("Ошибка загрузки файла:" + exception.getMessage());
         }
 
         return filename;
@@ -84,7 +87,7 @@ public class UserImageService {
         try {
             Files.delete(path.resolve(findImageNameByUserId(id)));
         } catch (IOException exception) {
-            throw new CantDeleteFileException("Ошибка удаления файла:" + exception.getMessage());
+            throw new ImpossiblyDeleteFileException("Ошибка удаления файла:" + exception.getMessage());
         }
     }
 
