@@ -3,6 +3,7 @@ package by.kolesnik.course.bank.service;
 import by.kolesnik.course.bank.exception.EntityNotFoundException;
 import by.kolesnik.course.bank.entity.User;
 import by.kolesnik.course.bank.repository.DeprecatedUserRepository;
+import by.kolesnik.course.bank.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,9 +12,9 @@ import java.util.Optional;
 @Service
 public class UserService {
 
-    private final DeprecatedUserRepository userRepository;
+    private final UserRepository userRepository;
 
-    public UserService(DeprecatedUserRepository userRepository) {
+    public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
@@ -36,6 +37,6 @@ public class UserService {
     }
 
     public void removeById(Long id) {
-        userRepository.removeById(id);
+        userRepository.deleteById(id);
     }
 }

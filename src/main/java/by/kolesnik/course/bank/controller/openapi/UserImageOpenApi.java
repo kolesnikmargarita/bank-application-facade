@@ -14,7 +14,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -110,4 +112,72 @@ public interface UserImageOpenApi {
     }
     )
     UploadResultDto upload(@PathVariable Long id, @RequestParam("file") MultipartFile file);
+
+    @Operation(
+            method = "GET",
+            summary = "поиск аватарки",
+            description = "Вернуть аватарку пользователя по id",
+            tags = "Работа с пользователями",
+            security = @SecurityRequirement(name = "Не требуется"),
+            parameters = {
+                    @Parameter(
+                            in = ParameterIn.PATH,
+                            name = "id",
+                            description = "Id пользователя, аватарку которого необходимо найти",
+                            required = true,
+                            example = "1"
+                    )
+            },
+            requestBody = @RequestBody(
+                    description = "возвращается аватарка",
+                    required = true,
+                    content = @Content(
+                            mediaType = MediaType.MULTIPART_FORM_DATA_VALUE
+                    )
+            )
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    description = "Аватарка найдена",
+                    responseCode = "200",
+                    content = @Content(
+                            mediaType = MediaType.MULTIPART_FORM_DATA_VALUE,
+                            array = @ArraySchema(schema = @Schema(implementation = ResponseEntity.class)),
+                            examples = @ExampleObject()
+                    )
+            ),
+            @ApiResponse(
+                    description = "Файл не найден",
+                    responseCode = "404",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject("""
+                                    [
+                                        {
+                                            "message": "Не удалось прочитать файл."
+                                        }
+                                    ]
+                                    """
+                            )
+                    )
+            ),
+            @ApiResponse(
+                    description = "Не верный URL",
+                    responseCode = "404",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject("""
+                                    [
+                                        {
+                                            "message": "Ошибка: unknown protocol:"
+                                        }
+                                    ]
+                                    """)
+                    )
+            )
+    }
+    )
+    ResponseEntity<Resource> find(@PathVariable Long id);
 }

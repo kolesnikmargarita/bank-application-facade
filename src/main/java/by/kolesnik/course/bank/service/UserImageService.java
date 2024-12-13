@@ -1,6 +1,9 @@
 package by.kolesnik.course.bank.service;
 
-import by.kolesnik.course.bank.dto.UploadResultDto;
+import by.kolesnik.course.bank.exception.ImpossiblyDeleteFileException;
+import by.kolesnik.course.bank.exception.ImpossiblyLoadFileException;
+import by.kolesnik.course.bank.exception.ImpossiblyReadFileException;
+import by.kolesnik.course.bank.exception.IncorrectURLException;
 import by.kolesnik.course.bank.util.FileUtil;
 import by.kolesnik.course.bank.entity.User;
 import org.springframework.core.io.Resource;
@@ -39,13 +42,13 @@ public class UserImageService {
     // найти пользователя по id
     // сохранить имя картинки у пользователя
     // вернуть URL
-    public UploadResultDto save(Long id, MultipartFile file) {
+    /*public UploadResultDto save(Long id, MultipartFile file) {
         final String filename = saveFile(file);
 
         updateUserImageName(id, filename);
 
         return new UploadResultDto(filename, null);
-    }
+    }*/
 
     public Resource findByUserId(Long id) {
         final String filename = findImageNameByUserId(id);
@@ -56,27 +59,39 @@ public class UserImageService {
             if (resource.exists() || resource.isReadable()) {
                 return resource;
             } else {
-                throw new RuntimeException("Не удалось прочитать файл.");
+                throw new ImpossiblyReadFileException("Не удалось прочитать файл.");
             }
         } catch (MalformedURLException exception) {
-            throw new RuntimeException("Ошибка: " + exception.getMessage());
+            throw new IncorrectURLException("Ошибка: " + exception.getMessage());
         }
     }
 
-    private String saveFile(MultipartFile file) {
+    private void UrlResource() throws MalformedURLException {
+        throw new MalformedURLException();
+    }
+
+    public String saveFile(MultipartFile file) {
         final String extension = FileUtil.getFileExtension(file.getOriginalFilename());
         final String filename = UUID.randomUUID() + extension;
 
         try {
             Files.copy(file.getInputStream(), path.resolve(filename));
         } catch (IOException exception) {
-            throw new RuntimeException("Ошибка загрузки файла:" + exception.getMessage());
+            throw new ImpossiblyLoadFileException("Ошибка загрузки файла:" + exception.getMessage());
         }
 
         return filename;
     }
 
-    private void updateUserImageName(Long id, String filename) {
+    public void deleteFile(Long id) {
+        try {
+            Files.delete(path.resolve(findImageNameByUserId(id)));
+        } catch (IOException exception) {
+            throw new ImpossiblyDeleteFileException("Ошибка удаления файла:" + exception.getMessage());
+        }
+    }
+
+    public void updateUserImageName(Long id, String filename) {
         final User user = userService.findUserById(id);
 
         user.setImageName(filename);
